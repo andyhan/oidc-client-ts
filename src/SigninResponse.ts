@@ -1,7 +1,7 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { Timer } from "./utils";
+import { DateUtils } from "./utils";
 import type { UserProfile } from "./User";
 
 const OidcScope = "openid";
@@ -61,13 +61,13 @@ export class SigninResponse {
         if (this.expires_at === undefined) {
             return undefined;
         }
-        return this.expires_at - Timer.getEpochTime();
+        return this.expires_at - DateUtils.getEpochTime();
     }
     public set expires_in(value: number | undefined) {
         // spec expects a number, but normalize here just in case
         if (typeof value === "string") value = Number(value);
         if (value !== undefined && value >= 0) {
-            this.expires_at = Math.floor(value) + Timer.getEpochTime();
+            this.expires_at = Math.floor(value) + DateUtils.getEpochTime();
         }
     }
 

@@ -1,7 +1,7 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { Logger, Timer } from "./utils";
+import { Logger, DateUtils } from "./utils";
 import type { IdTokenClaims } from "./Claims";
 
 /**
@@ -79,12 +79,12 @@ export class User {
         if (this.expires_at === undefined) {
             return undefined;
         }
-        return this.expires_at - Timer.getEpochTime();
+        return this.expires_at - DateUtils.getEpochTime();
     }
 
     public set expires_in(value: number | undefined) {
         if (value !== undefined) {
-            this.expires_at = Math.floor(value) + Timer.getEpochTime();
+            this.expires_at = Math.floor(value) + DateUtils.getEpochTime();
         }
     }
 

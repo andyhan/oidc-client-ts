@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 import { SigninResponse } from "./SigninResponse";
-import { Timer } from "./utils";
+import { DateUtils } from "./utils";
 
 describe("SigninResponse", () => {
     let now: number;
 
     beforeEach(() => {
         now = 0;
-        jest.spyOn(Timer, "getEpochTime").mockImplementation(() => now);
+        jest.spyOn(DateUtils, "getEpochTime").mockImplementation(() => now);
     });
 
     afterEach(() => {
@@ -71,7 +71,7 @@ describe("SigninResponse", () => {
             Object.assign(subject, { expires_in: 10 });
 
             // assert
-            expect(subject.expires_at).toEqual(Timer.getEpochTime() + 10);
+            expect(subject.expires_at).toEqual(10);
         });
 
         it.each([

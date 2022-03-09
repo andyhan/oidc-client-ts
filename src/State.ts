@@ -1,7 +1,7 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { Logger, CryptoUtils, Timer } from "./utils";
+import { Logger, CryptoUtils, DateUtils } from "./utils";
 import type { StateStore } from "./StateStore";
 
 /**
@@ -28,7 +28,7 @@ export class State {
             this.created = args.created;
         }
         else {
-            this.created = Timer.getEpochTime();
+            this.created = DateUtils.getEpochTime();
         }
         this.request_type = args.request_type;
     }
@@ -49,7 +49,7 @@ export class State {
     }
 
     public static async clearStaleState(storage: StateStore, age: number): Promise<void> {
-        const cutoff = Timer.getEpochTime() - age;
+        const cutoff = DateUtils.getEpochTime() - age;
 
         const keys = await storage.getAllKeys();
         Logger.debug("State.clearStaleState", "got keys", keys);

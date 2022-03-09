@@ -1,13 +1,12 @@
 import { User } from "./User";
-import { Timer } from "./utils";
+import { DateUtils } from "./utils";
 
 describe("User", () => {
-
     let now: number;
 
     beforeEach(() => {
         now = 0;
-        jest.spyOn(Timer, "getEpochTime").mockImplementation(() => now);
+        jest.spyOn(DateUtils, "getEpochTime").mockImplementation(() => now);
     });
 
     afterEach(() => {
