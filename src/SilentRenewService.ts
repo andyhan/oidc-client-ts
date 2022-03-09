@@ -56,7 +56,7 @@ export class SilentRenewService {
             if (err instanceof ErrorTimeout) {
                 // no response from authority server, e.g. IFrame timeout, ...
                 logger.warn("ErrorTimeout from signinSilent:", err, "retry in 5s");
-                this._retryTimer.init(5);
+                await this._retryTimer.init(5);
                 return;
             }
 

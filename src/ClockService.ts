@@ -1,3 +1,6 @@
+// Copyright (C) 2021 AuthTS Contributors
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 import { DateUtils } from "./utils";
 
 /**
@@ -13,7 +16,7 @@ import { DateUtils } from "./utils";
  * @public
  */
 export interface IClockService {
-    getEpochTime(): number;
+    getEpochTime(): Promise<number> | number;
 }
 
 /**
@@ -22,7 +25,7 @@ export interface IClockService {
  * @internal
  */
 export class ClockService implements IClockService {
-    public getEpochTime(): number {
+    public getEpochTime(): Promise<number> | number {
         return DateUtils.getEpochTime();
     }
 }

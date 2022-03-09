@@ -121,7 +121,7 @@ export class UserManager {
         const user = await this._loadUser();
         if (user) {
             logger.info("user loaded");
-            this._events.load(user, false);
+            await this._events.load(user, false);
             return user;
         }
 
@@ -270,7 +270,7 @@ export class UserManager {
         const user = new User({ ...state, ...response });
 
         await this.storeUser(user);
-        this._events.load(user);
+        await this._events.load(user);
         return user;
     }
 
@@ -412,7 +412,7 @@ export class UserManager {
 
         await this.storeUser(user);
         logger.debug("user stored");
-        this._events.load(user);
+        await this._events.load(user);
 
         return user;
     }
@@ -557,7 +557,7 @@ export class UserManager {
 
         await this.storeUser(user);
         logger.debug("user stored");
-        this._events.load(user);
+        await this._events.load(user);
     }
 
     /**

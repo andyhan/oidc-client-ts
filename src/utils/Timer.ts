@@ -17,10 +17,10 @@ export class Timer extends Event<[void]> {
         super(name);
     }
 
-    public init(durationInSeconds: number): void {
+    public async init(durationInSeconds: number): Promise<void> {
         const logger = this._logger.create("init");
         durationInSeconds = Math.max(Math.floor(durationInSeconds), 1);
-        const expiration = this._clockService.getEpochTime() + durationInSeconds;
+        const expiration = await this._clockService.getEpochTime() + durationInSeconds;
         if (this.expiration === expiration && this._timerHandle) {
             // no need to reinitialize to same expiration, so bail out
             logger.debug("skipping since already initialized for expiration at", this.expiration);
@@ -36,6 +36,7 @@ export class Timer extends Event<[void]> {
         // callback to handle scenarios where the browser device sleeps, and then
         // the timers end up getting delayed.
         const timerDurationInSeconds = Math.min(durationInSeconds, 5);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this._timerHandle = setInterval(this._callback, timerDurationInSeconds * 1000);
     }
 
@@ -51,8 +52,8 @@ export class Timer extends Event<[void]> {
         }
     }
 
-    protected _callback = (): void => {
-        const now = this._clockService.getEpochTime();
+    protected _callback = async (): Promise<void> => {
+        const now = await this._clockService.getEpochTime();
         const diff = this._expiration - now;
         this._logger.debug("timer completes in", diff);
 

@@ -36,18 +36,18 @@ describe("AccessTokenEvents", () => {
 
     describe("load", () => {
 
-        it("should cancel existing timers", () => {
+        it("should cancel existing timers", async () => {
             // act
-            subject.load({} as User);
+            await subject.load({} as User);
 
             // assert
             expect(expiringTimer.cancelWasCalled).toEqual(true);
             expect(expiredTimer.cancelWasCalled).toEqual(true);
         });
 
-        it("should initialize timers", () => {
+        it("should initialize timers", async () => {
             // act
-            subject.load({
+            await subject.load({
                 access_token:"token",
                 expires_in : 70,
             } as User);
@@ -57,9 +57,9 @@ describe("AccessTokenEvents", () => {
             expect(expiredTimer.duration).toEqual(71);
         });
 
-        it("should immediately schedule expiring timer if expiration is soon", () => {
+        it("should immediately schedule expiring timer if expiration is soon", async () => {
             // act
-            subject.load({
+            await subject.load({
                 access_token:"token",
                 expires_in : 10,
             } as User);
@@ -68,9 +68,9 @@ describe("AccessTokenEvents", () => {
             expect(expiringTimer.duration).toEqual(1);
         });
 
-        it("should not initialize expiring timer if already expired", () => {
+        it("should not initialize expiring timer if already expired", async () => {
             // act
-            subject.load({
+            await subject.load({
                 access_token:"token",
                 expires_in : 0,
             } as User);
@@ -79,9 +79,9 @@ describe("AccessTokenEvents", () => {
             expect(expiringTimer.duration).toEqual(undefined);
         });
 
-        it("should initialize expired timer if already expired", () => {
+        it("should initialize expired timer if already expired", async () => {
             // act
-            subject.load({
+            await subject.load({
                 access_token:"token",
                 expires_in : 0,
             } as User);
@@ -90,9 +90,9 @@ describe("AccessTokenEvents", () => {
             expect(expiredTimer.duration).toEqual(1);
         });
 
-        it("should not initialize timers if no access token", () => {
+        it("should not initialize timers if no access token", async () => {
             // act
-            subject.load({
+            await subject.load({
                 expires_in : 70,
             } as User);
 
@@ -101,9 +101,9 @@ describe("AccessTokenEvents", () => {
             expect(expiredTimer.duration).toEqual(undefined);
         });
 
-        it("should not initialize timers if no expiration on access token", () => {
+        it("should not initialize timers if no expiration on access token", async () => {
             // act
-            subject.load({
+            await subject.load({
                 access_token:"token",
             } as User);
 
@@ -136,7 +136,7 @@ class StubTimer extends Timer {
         this.duration = undefined;
     }
 
-    init(duration: number) {
+    async init(duration: number) {
         this.duration = duration;
     }
 

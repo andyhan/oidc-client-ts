@@ -23,65 +23,65 @@ describe("Timer", () => {
 
     describe("init", () => {
 
-        it("should setup a timer", () => {
+        it("should setup a timer", async () => {
             // act
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(setInterval).toHaveBeenCalledWith(expect.any(Function), expect.any(Number));
         });
 
-        it("should use 1 second if duration is too low", () => {
+        it("should use 1 second if duration is too low", async () => {
             // act
-            subject.init(0);
+            await subject.init(0);
 
             // assert
             expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
 
             // act
-            subject.init(-1);
+            await subject.init(-1);
             // assert
             expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
 
             // act
-            subject.init(-5);
+            await subject.init(-5);
 
             // assert
             expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
         });
 
-        it("should use duration if less than default", () => {
+        it("should use duration if less than default", async () => {
             // act
-            subject.init(2);
+            await subject.init(2);
 
             // assert
             expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 2000);
         });
 
-        it("should cancel previous timer if new time is not the same", () => {
+        it("should cancel previous timer if new time is not the same", async () => {
             // act
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(clearInterval).not.toHaveBeenCalled();
 
             // act
             clockService.now += 1;
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(clearInterval).toHaveBeenCalled();
         });
 
-        it("should not cancel previous timer if new time is same", () => {
+        it("should not cancel previous timer if new time is same", async () => {
             // act
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(clearInterval).not.toHaveBeenCalled();
 
             // act
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(clearInterval).not.toHaveBeenCalled();
@@ -90,12 +90,12 @@ describe("Timer", () => {
 
     describe("_callback", () => {
 
-        it("should fire when timer expires", () => {
+        it("should fire when timer expires", async () => {
             // arrange
             const cb = jest.fn();
             subject.addHandler(cb);
 
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(setInterval).toHaveBeenCalledWith(expect.any(Function), expect.any(Number));
@@ -115,12 +115,12 @@ describe("Timer", () => {
             expect(cb).toBeCalledTimes(1);
         });
 
-        it("should fire if timer late", () => {
+        it("should fire if timer late", async () => {
             // arrange
             const cb = jest.fn();
             subject.addHandler(cb);
 
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(setInterval).toHaveBeenCalledWith(expect.any(Function), expect.any(Number));
@@ -138,9 +138,9 @@ describe("Timer", () => {
             expect(cb).toBeCalledTimes(1);
         });
 
-        it("should cancel window timer", () => {
+        it("should cancel window timer", async () => {
             // arrange
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(setInterval).toHaveBeenCalledWith(expect.any(Function), expect.any(Number));
@@ -155,9 +155,9 @@ describe("Timer", () => {
 
     describe("cancel", () => {
 
-        it("should cancel timer", () => {
+        it("should cancel timer", async () => {
             // act
-            subject.init(10);
+            await subject.init(10);
 
             // assert
             expect(clearInterval).not.toHaveBeenCalled();
@@ -180,13 +180,13 @@ describe("Timer", () => {
 
     describe("addHandler", () => {
 
-        it("should allow callback to be invoked", () => {
+        it("should allow callback to be invoked", async () => {
             // arrange
             const cb = jest.fn();
 
             // act
             subject.addHandler(cb);
-            subject.init(10);
+            await subject.init(10);
             clockService.now += 10;
             jest.runOnlyPendingTimers();
 
@@ -194,7 +194,7 @@ describe("Timer", () => {
             expect(cb).toBeCalled();
         });
 
-        it("should allow multiple callbacks", () => {
+        it("should allow multiple callbacks", async () => {
             // arrange
             const cb = jest.fn();
 
@@ -203,7 +203,7 @@ describe("Timer", () => {
             subject.addHandler(cb);
             subject.addHandler(cb);
             subject.addHandler(cb);
-            subject.init(10);
+            await subject.init(10);
             clockService.now += 10;
             jest.runOnlyPendingTimers();
 
@@ -214,11 +214,11 @@ describe("Timer", () => {
 
     describe("removeHandler", () => {
 
-        it("should remove callback from being invoked", () => {
+        it("should remove callback from being invoked", async () => {
             // arrange
             const cb = jest.fn();
             subject.addHandler(cb);
-            subject.init(10);
+            await subject.init(10);
 
             // act
             subject.removeHandler(cb);
@@ -229,7 +229,7 @@ describe("Timer", () => {
             expect(cb).toBeCalledTimes(0);
         });
 
-        it("should remove individual callback", () => {
+        it("should remove individual callback", async () => {
             // arrange
             const cb1 = jest.fn();
             const cb2 = jest.fn();
@@ -238,7 +238,7 @@ describe("Timer", () => {
             subject.addHandler(cb1);
 
             // act
-            subject.init(10);
+            await subject.init(10);
             subject.removeHandler(cb1);
             subject.removeHandler(cb1);
             clockService.now += 10;
@@ -253,7 +253,7 @@ describe("Timer", () => {
 
 class StubClockService implements IClockService {
     public now = 1;
-    getEpochTime(): number {
+    getEpochTime(): Promise<number> | number {
         return this.now;
     }
 }

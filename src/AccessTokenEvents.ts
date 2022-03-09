@@ -26,7 +26,7 @@ export class AccessTokenEvents {
         this._expiringNotificationTimeInSeconds = args.expiringNotificationTimeInSeconds;
     }
 
-    public load(container: User): void {
+    public async load(container: User): Promise<void> {
         const logger = this._logger.create("load");
         // only register events if there's an access token and it has an expiration
         if (container.access_token && container.expires_in !== undefined) {
@@ -41,7 +41,7 @@ export class AccessTokenEvents {
                 }
 
                 logger.debug("registering expiring timer, raising in", expiring, "seconds");
-                this._expiringTimer.init(expiring);
+                await this._expiringTimer.init(expiring);
             }
             else {
                 logger.debug("canceling existing expiring timer because we're past expiration.");
@@ -51,7 +51,7 @@ export class AccessTokenEvents {
             // if it's negative, it will still fire
             const expired = duration + 1;
             logger.debug("registering expired timer, raising in", expired, "seconds");
-            this._expiredTimer.init(expired);
+            await this._expiredTimer.init(expired);
         }
         else {
             this._expiringTimer.cancel();

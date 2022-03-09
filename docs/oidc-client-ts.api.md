@@ -16,7 +16,7 @@ export class AccessTokenEvents {
     addAccessTokenExpired(cb: AccessTokenCallback): () => void;
     addAccessTokenExpiring(cb: AccessTokenCallback): () => void;
     // (undocumented)
-    load(container: User): void;
+    load(container: User): Promise<void>;
     // (undocumented)
     protected readonly _logger: Logger;
     removeAccessTokenExpired(cb: AccessTokenCallback): void;
@@ -119,7 +119,7 @@ export type ExtraSignoutRequestArgs = Pick<CreateSignoutRequestArgs, "extraQuery
 // @public
 export interface IClockService {
     // (undocumented)
-    getEpochTime(): number;
+    getEpochTime(): Promise<number> | number;
 }
 
 // Warning: (ae-forgotten-export) The symbol "Mandatory" needs to be exported by the entry point index.d.ts
@@ -946,7 +946,7 @@ export class UserManagerEvents extends AccessTokenEvents {
     addUserSignedOut(cb: UserSignedOutCallback): () => void;
     addUserUnloaded(cb: UserUnloadedCallback): () => void;
     // (undocumented)
-    load(user: User, raiseEvent?: boolean): void;
+    load(user: User, raiseEvent?: boolean): Promise<void>;
     // (undocumented)
     protected readonly _logger: Logger;
     // @internal (undocumented)

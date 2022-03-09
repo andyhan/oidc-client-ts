@@ -51,8 +51,8 @@ export class UserManagerEvents extends AccessTokenEvents {
         });
     }
 
-    public load(user: User, raiseEvent=true): void {
-        super.load(user);
+    public async load(user: User, raiseEvent=true): Promise<void> {
+        await super.load(user);
         if (raiseEvent) {
             this._userLoaded.raise(user);
         }
